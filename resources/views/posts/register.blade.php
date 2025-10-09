@@ -1,6 +1,6 @@
 @extends('posts.layout')
 
-@section('title', 'Create New Post')
+@section('title', 'Register')
 
 @push('styles')
     <style>
@@ -12,8 +12,8 @@
             padding: 0;
         }
 
-        .post-form-wrapper {
-            max-width: 700px;
+        .register-wrapper {
+            max-width: 600px;
             margin: 50px auto;
             padding: 30px;
             background: #1e1e1e;
@@ -24,44 +24,37 @@
 
         h2 {
             color: #ff3333;
-            border-bottom: 2px solid #b30000;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
             text-align: center;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            margin-bottom: 20px;
         }
 
         label {
-            font-weight: bold;
-            margin-bottom: 6px;
+            display: block;
             color: #ff6666;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
 
         input[type="text"],
-        textarea {
+        input[type="email"],
+        input[type="password"] {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background: #2a2a2a;
             border: 1px solid #b30000;
             border-radius: 8px;
             color: #fff;
-            font-size: 15px;
-            resize: none;
+            margin-bottom: 15px;
         }
 
-        input[type="text"]:focus,
-        textarea:focus {
+        input:focus {
             outline: none;
             border-color: #ff3333;
             box-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
         }
 
         button {
+            width: 100%;
             padding: 12px;
             background: #b30000;
             color: #fff;
@@ -77,15 +70,18 @@
             transform: translateY(-2px);
         }
 
-        .back-link {
-            display: inline-block;
+        .back {
+            text-align: center;
             margin-top: 15px;
-            text-decoration: none;
+        }
+
+        .back a {
             color: #ff3333;
+            text-decoration: none;
             font-weight: bold;
         }
 
-        .back-link:hover {
+        .back a:hover {
             text-decoration: underline;
         }
 
@@ -104,8 +100,8 @@
 @endpush
 
 @section('content')
-    <div class="post-form-wrapper">
-        <h2>Create New Post</h2>
+    <div class="register-wrapper">
+        <h2>Register</h2>
 
         @if ($errors->any())
             <ul class="error-list">
@@ -115,22 +111,26 @@
             </ul>
         @endif
 
-        <form action="{{ route('posts.store') }}" method="POST">
+        <form action="{{ route('posts.register.submit') }}" method="POST">
             @csrf
 
-            <div>
-                <label for="title">Title</label>
-                <input type="text" name="title" id="title" value="{{ old('title') }}" required>
-            </div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ old('name') }}" required>
 
-            <div>
-                <label for="body">Body</label>
-                <textarea name="body" id="body" rows="5" required>{{ old('body') }}</textarea>
-            </div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ old('email') }}" required>
 
-            <button type="submit">Save</button>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="password_confirmation">Confirm Password:</label>
+            <input type="password" id="password_confirmation" name="password_confirmation" required>
+
+            <button type="submit">Register</button>
         </form>
 
-        <a href="{{ route('posts.index') }}" class="back-link">← Back to Posts</a>
+        <div class="back">
+            <a href="{{ route('posts.index') }}">← Back to Posts</a>
+        </div>
     </div>
 @endsection

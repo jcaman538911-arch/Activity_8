@@ -2,63 +2,82 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Post;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    // Display all posts
     public function index()
     {
-        $posts = Post::latest()->get();
+        $posts = Auth::user()->posts()->latest()->get();
         return view('posts.index', compact('posts'));
     }
 
+    // Show the form for creating a new post
     public function create()
     {
         return view('posts.create');
     }
 
-    public function store(Request $request)
+    // Show a single post
+    public function show($id)
     {
-        $request->validate([
-            'title' => 'required',
-            'body'  => 'required',
-        ]);
-
-        Post::create($request->all());
-
-        return redirect()->route('posts.index')
-                         ->with('success', 'Post created successfully.');
-    }
-
-    public function show(Post $post)
-    {
+        $post = $this->findUserPost($id);
         return view('posts.show', compact('post'));
     }
 
-    public function edit(Post $post)
+    // Store a newly created post in storage
+    public function store(Request $request)
     {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+        ]);
+
+        Auth::user()->posts()->create($validated);
+
+        return redirect()->route('posts.index')->with('success', 'Post created successfully.');
+    }
+
+    // Edit a post
+    public function edit($id)
+    {
+        $post = $this->findUserPost($id);
         return view('posts.edit', compact('post'));
     }
 
-    public function update(Request $request, Post $post)
+    // Update a post
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'title' => 'required',
-            'body'  => 'required',
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
         ]);
 
-        $post->update($request->all());
+        $post = $this->findUserPost($id);
+        $post->update($request->only(['title', 'body']));
 
-        return redirect()->route('posts.index')
-                         ->with('success', 'Post updated successfully.');
+        return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
     }
 
-    public function destroy(Post $post)
+    // Delete a post
+    public function destroy($id)
     {
+        $post = $this->findUserPost($id);
         $post->delete();
 
-        return redirect()->route('posts.index')
-                         ->with('success', 'Post deleted successfully.');
+        return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
+    }
+
+    private function findUserPost(int $id): Post
+    {
+        return Auth::user()->posts()->whereKey($id)->firstOrFail();
     }
 }

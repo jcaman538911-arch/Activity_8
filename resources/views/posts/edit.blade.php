@@ -1,11 +1,8 @@
 @extends('posts.layout')
 
-@section('content')
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Post</title>
+@section('title', 'Edit Post')
+
+@push('styles')
     <style>
         body {
             background-color: #121212;
@@ -15,7 +12,7 @@
             padding: 0;
         }
 
-        .container {
+        .post-form-wrapper {
             max-width: 700px;
             margin: 50px auto;
             padding: 30px;
@@ -45,7 +42,8 @@
             color: #ff6666;
         }
 
-        input[type="text"], textarea {
+        input[type="text"],
+        textarea {
             width: 100%;
             padding: 12px;
             background: #2a2a2a;
@@ -56,7 +54,8 @@
             resize: none;
         }
 
-        input[type="text"]:focus, textarea:focus {
+        input[type="text"]:focus,
+        textarea:focus {
             outline: none;
             border-color: #ff3333;
             box-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
@@ -89,23 +88,44 @@
         .back-link:hover {
             text-decoration: underline;
         }
+
+        .error-list {
+            background: rgba(179, 0, 0, 0.2);
+            border-left: 4px solid #ff3333;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .error-list li {
+            margin: 4px 0;
+        }
     </style>
-</head>
-<body>
-    <div class="container">
+@endpush
+
+@section('content')
+    <div class="post-form-wrapper">
         <h1>Edit Post</h1>
+
+        @if ($errors->any())
+            <ul class="error-list">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        @endif
 
         <form action="{{ route('posts.update', $post->id) }}" method="POST">
             @csrf
             @method('PUT')
 
             <div>
-                <label for="title">Title:</label>
+                <label for="title">Title</label>
                 <input type="text" name="title" id="title" value="{{ old('title', $post->title) }}" required>
             </div>
 
             <div>
-                <label for="body">Body:</label>
+                <label for="body">Body</label>
                 <textarea name="body" id="body" rows="5" required>{{ old('body', $post->body) }}</textarea>
             </div>
 
@@ -114,6 +134,4 @@
 
         <a href="{{ route('posts.index') }}" class="back-link">← Back to Posts</a>
     </div>
-</body>
-</html>
 @endsection

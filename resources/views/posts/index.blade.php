@@ -1,76 +1,60 @@
 @extends('posts.layout')
 
-@section('content')
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>All Posts</title>
-    <style>
-        body {
-            background-color: #121212; /* black background */
-            color: #fff;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+@section('title', 'All Posts')
 
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 30px;
-            background: #1e1e1e; /* dark card background */
-            border: 1px solid #b30000;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(179, 0, 0, 0.5);
+@push('styles')
+    <style>
+        .posts-container {
+            padding: 32px;
+            background: rgba(30, 30, 30, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
         }
 
         h1 {
-            color: #ff3333;
-            border-bottom: 2px solid #b30000;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            color: #ff6666;
+            margin: 0 0 24px;
+            letter-spacing: 0.5px;
         }
 
         .create-btn {
             display: inline-block;
             margin-bottom: 20px;
-            padding: 10px 18px;
-            background: #b30000;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #ff3333, #b30000);
             color: #fff;
             text-decoration: none;
-            border-radius: 8px;
-            transition: background 0.3s, transform 0.2s;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: transform 0.2s ease, filter 0.2s ease;
         }
 
         .create-btn:hover {
-            background: #ff3333;
             transform: translateY(-2px);
-        }
-
-        .success-msg {
-            color: #00ff99;
-            margin-bottom: 15px;
-            font-weight: bold;
+            filter: brightness(1.1);
         }
 
         ul {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         li {
-            background: #2a2a2a;
-            margin-bottom: 12px;
-            padding: 15px;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            margin-bottom: 14px;
+            padding: 18px;
+            border-radius: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid transparent;
+            transition: border-color 0.3s ease;
         }
 
         li a {
-            color: #ff3333;
+            color: #ff8080;
             text-decoration: none;
             font-weight: bold;
             margin-right: 10px;
@@ -80,55 +64,65 @@
             text-decoration: underline;
         }
 
+        li:hover {
+            border-color: rgba(255, 128, 128, 0.3);
+        }
+
         .actions {
             display: flex;
             gap: 10px;
         }
 
-        .actions a {
-            color: #b30000;
-            text-decoration: none;
+        .actions a,
+        .actions button {
             padding: 6px 12px;
-            border: 1px solid #b30000;
-            border-radius: 6px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.04);
+            color: #ff9999;
+            text-decoration: none;
+            font-weight: bold;
             transition: background 0.3s, color 0.3s;
-        }
-
-        .actions a:hover {
-            background: #ff3333;
-            color: #fff;
+            cursor: pointer;
         }
 
         .actions button {
-            padding: 6px 12px;
-            background: #b30000;
-            color: #fff;
             border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s;
+            background: linear-gradient(135deg, #ff3333, #b30000);
+            color: #fff;
         }
 
+        .actions a:hover,
         .actions button:hover {
-            background: #ff3333;
+            background: rgba(255, 128, 128, 0.18);
+            color: #fff;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 32px 16px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+            color: #bbb;
+        }
+
+        .empty-state strong {
+            color: #ff8080;
         }
     </style>
-</head>
-<body>
-    <div class="container">
+@endpush
+
+@section('content')
+    <div class="posts-container">
         <h1>All Posts</h1>
         <a href="{{ route('posts.create') }}" class="create-btn">+ Create New Post</a>
 
-        @if(session('success'))
-            <p class="success-msg">{{ session('success') }}</p>
-        @endif
-
         <ul>
-            @foreach($posts as $post)
+            @forelse($posts as $post)
                 <li>
                     <div>
                         <a href="{{ route('posts.show', $post->id) }}">{{ $post->title }}</a>
-                    </div>
                     <div class="actions">
                         <a href="{{ route('posts.edit', $post->id) }}">Edit</a>
                         <form action="{{ route('posts.destroy', $post->id) }}" method="POST" style="display:inline">
@@ -138,9 +132,12 @@
                         </form>
                     </div>
                 </li>
-            @endforeach
+            @empty
+                <li class="empty-state">
+                    <strong>No posts yet.</strong>
+                    <div>Share your first story by clicking “+ Create New Post”.</div>
+                </li>
+            @endforelse
         </ul>
     </div>
-</body>
-</html>
 @endsection

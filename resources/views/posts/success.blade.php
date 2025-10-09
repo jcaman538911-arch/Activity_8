@@ -1,6 +1,6 @@
 @extends('posts.layout')
 
-@section('title', $post->title)
+@section('title', 'Registration Successful')
 
 @push('styles')
     <style>
@@ -12,27 +12,25 @@
             padding: 0;
         }
 
-        .post-detail {
-            max-width: 700px;
+        .success-card {
+            max-width: 600px;
             margin: 50px auto;
-            padding: 30px;
             background: #1e1e1e;
-            border: 1px solid #b30000;
+            padding: 30px;
             border-radius: 12px;
+            border: 1px solid #b30000;
             box-shadow: 0 0 15px rgba(179, 0, 0, 0.5);
         }
 
-        h1 {
+        h2 {
             color: #ff3333;
-            margin-bottom: 20px;
-        }
-
-        p {
-            line-height: 1.6;
+            text-align: center;
             margin-bottom: 20px;
         }
 
         .back-link {
+            display: inline-block;
+            margin-top: 20px;
             color: #ff3333;
             text-decoration: none;
             font-weight: bold;
@@ -45,9 +43,14 @@
 @endpush
 
 @section('content')
-    <div class="post-detail">
-        <h1>{{ $post->title }}</h1>
-        <p>{{ $post->body }}</p>
-        <a href="{{ route('posts.index') }}" class="back-link">← Back to Posts</a>
+    <div class="success-card">
+        <h2>🎉 Registration Successful!</h2>
+
+        <p><strong>Name:</strong> {{ $user['name'] }}</p>
+        <p><strong>Email:</strong> {{ $user['email'] }}</p>
+
+        <div style="text-align:center;">
+            <a href="{{ route('posts.register') }}" class="back-link">← Back to Register</a>
+        </div>
     </div>
 @endsection
