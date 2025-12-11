@@ -4,38 +4,37 @@
 
 @push('styles')
     <style>
-        body {
-            background-color: #121212;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
         .post-detail {
-            max-width: 700px;
-            margin: 50px auto;
-            padding: 30px;
-            background: #1e1e1e;
-            border: 1px solid #b30000;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(179, 0, 0, 0.5);
+            max-width: 720px;
+            margin: 0 auto;
+            padding: clamp(28px, 5vw, 42px);
+            background: linear-gradient(135deg, rgba(11, 17, 34, 0.9), rgba(20, 29, 58, 0.92));
+            border: 1px solid rgba(113, 227, 255, 0.25);
+            border-radius: 34px;
+            box-shadow: 0 30px 90px rgba(5, 6, 23, 0.7);
         }
 
         h1 {
-            color: #ff3333;
-            margin-bottom: 20px;
+            color: var(--accent-2);
+            margin-bottom: 18px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
         p {
-            line-height: 1.6;
-            margin-bottom: 20px;
+            line-height: 1.8;
+            margin-bottom: 26px;
+            color: var(--text-muted);
+            font-size: 1.05rem;
         }
 
         .back-link {
-            color: #ff3333;
+            color: var(--accent-2);
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .back-link:hover {
